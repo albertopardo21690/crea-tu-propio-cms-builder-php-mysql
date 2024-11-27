@@ -1,6 +1,4 @@
-Aquí tienes una versión más atractiva y visual para incluir en tu `README.md` usando Markdown:  
 
-```markdown
 # 🌟 Crea tu propio CMS-Builder con PHP y MySQL 🚀  
 
 ¡Bienvenido a este emocionante proyecto! 🎉 Aprende cómo construir un CMS-Builder similar a Strapi, pero utilizando las potentes herramientas de **PHP** y **MySQL**.  
@@ -19,7 +17,4 @@ Proporcionar una solución ligera, personalizable y completamente en PHP para ge
 
 ---
 
-¡Empieza ahora y crea algo increíble! 💻✨  
-```  
-
-Esto da una presentación más atractiva y profesional al proyecto en tu `README.md`.
+¡Empieza ahora y crea algo increíble! 💻✨
