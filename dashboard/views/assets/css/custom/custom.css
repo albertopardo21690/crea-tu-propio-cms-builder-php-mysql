@@ -1,0 +1,29 @@
+a:link, a:visited, a:hover, a:active{
+  text-decoration: none !important;
+}
+
+.rounded{
+	border-radius:8px !important;
+}
+
+.rounded-start{
+	border-top-left-radius: 8px !important;
+    border-bottom-left-radius: 8px !important;
+}
+
+.rounded-end{
+	border-top-right-radius: 8px !important;
+    border-bottom-right-radius: 8px !important;
+}
+
+.rounded-top{
+	border-top-left-radius: 8px !important;
+    border-top-right-radius: 8px !important;
+}
+
+.rounded-bottom{
+	border-bottom-left-radius: 8px !important;
+    border-bottom-right-radius: 8px !important;
+}
+
+
