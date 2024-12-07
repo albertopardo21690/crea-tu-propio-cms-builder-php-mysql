@@ -26,4 +26,25 @@ a:link, a:visited, a:hover, a:active{
     border-bottom-right-radius: 8px !important;
 }
 
+.backgroundImage {
+    width: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    z-index: 1;
+}
 
+.form-check-input {
+    width: 1.2em !important;
+    height: 1.2em !important;
+}
+
+.form-check-input:active, .form-check-input:focus, .btn {
+    outline: 0 !important;
+    box-shadow: none !important;
+}
+
+.list-group-item {
+    border: 0 !important;
+}

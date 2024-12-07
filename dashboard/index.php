@@ -11,6 +11,7 @@ ini_set("error_log", DIR . "/php_error_log");
 // Requerimientos
 
 require_once "controllers/template.controller.php";
+require_once "controllers/curl.controller.php";
 
 // Plantilla
 

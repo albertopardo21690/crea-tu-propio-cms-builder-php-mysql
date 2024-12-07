@@ -58,6 +58,13 @@
                 <small><sup>*</sup> Campos obligatorios</small>
 
                 <button type="submit" class="btn btn-dark btn-block w-100 rounded mt-5">Instalar</button>
+
+                <?php
+                    require_once "controllers/install.controller.php";
+
+                    $install = new InstallController();
+                    $install -> install();
+                ?>
             </form>
         </div>
     </div>
