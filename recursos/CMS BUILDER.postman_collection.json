@@ -1,0 +1,452 @@
+{
+	"info": {
+		"_postman_id": "e564b582-065b-4c9f-9192-d320e7486188",
+		"name": "CMS BUILDER",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11446859"
+	},
+	"item": [
+		{
+			"name": "Registro de Administradores",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "fgadsfg34fhfgj456erFGHDRG6546hdfhdf",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "email_admin",
+							"value": "admin@dashboard.com",
+							"type": "text"
+						},
+						{
+							"key": "password_admin",
+							"value": "123456",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://cms-builder-api.com/admins?register=true&suffix=admin",
+					"protocol": "http",
+					"host": [
+						"cms-builder-api",
+						"com"
+					],
+					"path": [
+						"admins"
+					],
+					"query": [
+						{
+							"key": "register",
+							"value": "true"
+						},
+						{
+							"key": "suffix",
+							"value": "admin"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Sin Token",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{apikey}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "title_page",
+							"value": "Inicio",
+							"type": "text"
+						},
+						{
+							"key": "url_page",
+							"value": "inicio",
+							"type": "text"
+						},
+						{
+							"key": "icon_page",
+							"value": "bi bi-house-door-fill",
+							"type": "text"
+						},
+						{
+							"key": "type_page",
+							"value": "modules",
+							"type": "text"
+						},
+						{
+							"key": "order_page",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "date_created_page",
+							"value": "2024-10-18",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{endpoint}}pages?token=no&except=id_page",
+					"host": [
+						"{{endpoint}}pages"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "no"
+						},
+						{
+							"key": "except",
+							"value": "id_page"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Básico",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{apikey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{endpoint}}admins",
+					"host": [
+						"{{endpoint}}admins"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login de Administradores",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{apikey}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "email_admin",
+							"value": "admin@dashboard.com",
+							"type": "text"
+						},
+						{
+							"key": "password_admin",
+							"value": "123456",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{endpoint}}admins?login=true&suffix=admin",
+					"host": [
+						"{{endpoint}}admins"
+					],
+					"query": [
+						{
+							"key": "login",
+							"value": "true"
+						},
+						{
+							"key": "suffix",
+							"value": "admin"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET con filtro y selección",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{apikey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{endpoint}}admins?linkTo=id_admin&equalTo=1&select=*",
+					"host": [
+						"{{endpoint}}admins"
+					],
+					"query": [
+						{
+							"key": "linkTo",
+							"value": "id_admin"
+						},
+						{
+							"key": "equalTo",
+							"value": "1"
+						},
+						{
+							"key": "select",
+							"value": "*"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT Actualizar registro",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "email_admin",
+							"value": "superadmin@dashboard.com",
+							"type": "text"
+						},
+						{
+							"key": "title_admin",
+							"value": "CMS Builder",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{endpoint}}admins?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MjkyODQyMzksImV4cCI6MTcyOTM3MDYzOSwiZGF0YSI6eyJpZCI6IjEiLCJlbWFpbCI6ImFkbWluQGRhc2hib2FyZC5jb20ifX0.0o9J3dC5V3Ri3Z_D58h14j6tdb56CD5DYL6SadNuPS8&id=1&nameId=id_admin&table=admins&suffix=admin",
+					"host": [
+						"{{endpoint}}admins"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MjkyODQyMzksImV4cCI6MTcyOTM3MDYzOSwiZGF0YSI6eyJpZCI6IjEiLCJlbWFpbCI6ImFkbWluQGRhc2hib2FyZC5jb20ifX0.0o9J3dC5V3Ri3Z_D58h14j6tdb56CD5DYL6SadNuPS8"
+						},
+						{
+							"key": "id",
+							"value": "1"
+						},
+						{
+							"key": "nameId",
+							"value": "id_admin"
+						},
+						{
+							"key": "table",
+							"value": "admins"
+						},
+						{
+							"key": "suffix",
+							"value": "admin"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Ordenar Datos",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{apikey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{endpoint}}pages?orderBy=order_page&orderMode=ASC",
+					"host": [
+						"{{endpoint}}pages"
+					],
+					"query": [
+						{
+							"key": "orderBy",
+							"value": "order_page"
+						},
+						{
+							"key": "orderMode",
+							"value": "ASC"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE Eliminar registro",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "{{endpoint}}admins?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MjkyODQyMzksImV4cCI6MTcyOTM3MDYzOSwiZGF0YSI6eyJpZCI6IjEiLCJlbWFpbCI6ImFkbWluQGRhc2hib2FyZC5jb20ifX0.0o9J3dC5V3Ri3Z_D58h14j6tdb56CD5DYL6SadNuPS8&id=1&nameId=id_admin&table=admins&suffix=admin",
+					"host": [
+						"{{endpoint}}admins"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MjkyODQyMzksImV4cCI6MTcyOTM3MDYzOSwiZGF0YSI6eyJpZCI6IjEiLCJlbWFpbCI6ImFkbWluQGRhc2hib2FyZC5jb20ifX0.0o9J3dC5V3Ri3Z_D58h14j6tdb56CD5DYL6SadNuPS8"
+						},
+						{
+							"key": "id",
+							"value": "1"
+						},
+						{
+							"key": "nameId",
+							"value": "id_admin"
+						},
+						{
+							"key": "table",
+							"value": "admins"
+						},
+						{
+							"key": "suffix",
+							"value": "admin"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Tablas Relacionadas",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{apikey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{endpoint}}relations?rel=modules,pages&type=module,page&linkTo=url_page&equalTo=admins",
+					"host": [
+						"{{endpoint}}relations"
+					],
+					"query": [
+						{
+							"key": "rel",
+							"value": "modules,pages"
+						},
+						{
+							"key": "type",
+							"value": "module,page"
+						},
+						{
+							"key": "linkTo",
+							"value": "url_page"
+						},
+						{
+							"key": "equalTo",
+							"value": "admins"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Con Token",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{apikey}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "title_page",
+							"value": "Inicio",
+							"type": "text"
+						},
+						{
+							"key": "url_page",
+							"value": "inicio",
+							"type": "text"
+						},
+						{
+							"key": "icon_page",
+							"value": "bi bi-house-door-fill",
+							"type": "text"
+						},
+						{
+							"key": "type_page",
+							"value": "modules",
+							"type": "text"
+						},
+						{
+							"key": "order_page",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "date_created_page",
+							"value": "2024-10-18",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{endpoint}}pages?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MjkyODQyMzksImV4cCI6MTcyOTM3MDYzOSwiZGF0YSI6eyJpZCI6IjEiLCJlbWFpbCI6ImFkbWluQGRhc2hib2FyZC5jb20ifX0.0o9J3dC5V3Ri3Z_D58h14j6tdb56CD5DYL6SadNuPS8&table=admins&suffix=admin",
+					"host": [
+						"{{endpoint}}pages"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MjkyODQyMzksImV4cCI6MTcyOTM3MDYzOSwiZGF0YSI6eyJpZCI6IjEiLCJlbWFpbCI6ImFkbWluQGRhc2hib2FyZC5jb20ifX0.0o9J3dC5V3Ri3Z_D58h14j6tdb56CD5DYL6SadNuPS8"
+						},
+						{
+							"key": "table",
+							"value": "admins"
+						},
+						{
+							"key": "suffix",
+							"value": "admin"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

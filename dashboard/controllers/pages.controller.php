@@ -1,20 +1,22 @@
-<?php
+<?php 
 
-class PagesController {
+class PagesController{
 
-    public function managePage() {
+	public function managePage(){
 
-        if(isset($_POST["title_page"])) {
+		if(isset($_POST["title_page"])){
 
-            // Editar página
+			/*=============================================
+			Editar Página
+			=============================================*/
 
-            if(isset($_POST["id_page"])) {
+			if(isset($_POST["id_page"])){
 
-                $url = "pages?id=".base64_decode($_POST["id_page"])."&nameId=id_page&token=".$_SESSION["admin"]->token_admin."&table=admins&suffix=admin";
-                $method = "PUT";
-                $fields = "title_page=".trim($_POST["title_page"])."&url_page=".urlencode(strtolower(trim($_POST["url_page"])))."&icon_page=".trim($_POST["icon_page"])."&type_page=".$_POST["type_page"];
-
-                $update = CurlController::request($url,$method,$fields);
+				$url = "pages?id=".base64_decode($_POST["id_page"])."&nameId=id_page&token=".$_SESSION["admin"]->token_admin."&table=admins&suffix=admin";
+				$method = "PUT";
+				$fields = "title_page=".trim($_POST["title_page"])."&url_page=".urlencode(strtolower(trim($_POST["url_page"])))."&icon_page=".trim($_POST["icon_page"])."&type_page=".$_POST["type_page"];
+			
+				$update = CurlController::request($url,$method,$fields);
 
 				if($update->status == 200){
 
@@ -32,96 +34,134 @@ class PagesController {
 
 				}
 
-            } else {
 
-                // Validar que la página no exista
+			}else{
 
-                $url = "pages?linkTo=title_page,url_page&equalTo=".trim($_POST["title_page"]).",".trim($_POST["url_page"]);
-                $method = "GET";
-                $fields = array();
+				/*=============================================
+				Validar que la Página no exista
+				=============================================*/
 
-                $getPage = CurlController::request($url, $method, $fields);
+				$url = "pages?linkTo=title_page,url_page&equalTo=".trim($_POST["title_page"]).",".trim($_POST["url_page"]);
+				$method = "GET";
+				$fields = array();
 
-                if($getPage->status == 200) {
-                    echo '<script>
-                        fncMatPreloader("off");
-                        fncFormatInputs();
-                        fncToastr("error", "ERROR: Esta página ya existe.");
-                    </script>';
+				$getPage = CurlController::request($url,$method,$fields);
+				
+				if($getPage->status == 200){
 
-                    return;
-                } else {
+					echo '
 
-                    // Crear la página
+					<script>
 
-                    $url = "pages?token=".$_SESSION["admin"]->token_admin."&table=admins&suffix=admin";
-                    $method = "POST";
-                    $fields = array(
-                        "title_page" => trim($_POST["title_page"]),
-                        "url_page" => urlencode(strtolower(trim($_POST["url_page"]))),
-                        "icon_page" => trim($_POST["icon_page"]),
-                        "type_page" => $_POST["type_page"],
-                        "order_page" => 1000,
-                        "date_created_page" => date("Y-m-d")
-                    );
+						fncMatPreloader("off");
+						fncFormatInputs();
+					    fncToastr("error","ERROR: Esta página ya existe");	
 
-                    $create = CurlController::request($url, $method, $fields);
+					</script>
 
-                    if($create->status == 200) {
-                        
-                        // Crear página personalizable
+					';
 
-                        if($fields["type_page"] == "custom") {
+					return;
 
-                            // Creamos carpeta de módulo personalizable
+				}
 
-                            $directory = DIR."/views/pages/custom/".$fields["url_page"];
+				/*=============================================
+				Crear Página
+				=============================================*/
 
-                            if(!file_exists($directory)) {
+				$url = "pages?token=".$_SESSION["admin"]->token_admin."&table=admins&suffix=admin";
+				$method = "POST";
+				$fields = array(
+					"title_page" => trim($_POST["title_page"]),
+					"url_page" => urlencode(strtolower(trim($_POST["url_page"]))),
+					"icon_page" => trim($_POST["icon_page"]),
+					"type_page" =>$_POST["type_page"],
+					"order_page" => 1000,
+					"date_created_page" => date("Y-m-d")
+				);
 
-                                mkdir($directory, 0755);
+				$create = CurlController::request($url,$method,$fields);
 
-                            }
+				if($create->status == 200){
 
-                            // Copiamos el archivo custom con el nuevo nombre
+					/*=============================================
+					Crear Página personalizable
+					=============================================*/
 
-                            $from = DIR."/views/pages/custom/custom.php";
+					if($fields["type_page"] == "custom"){
 
-                            if(copy($from, $directory.'/'.$fields["url_page"].'.php')) {
+						/*=============================================
+						Creamos carpeta de página personalizable
+						=============================================*/
 
-                                echo '<script>
-                                    fncMatPreloader("off");
-                                    fncFormatInputs();
-                                    fncSweetAlert("success","La página ha sido creada correctamente.", setTimeout(() => window.location="/'.$fields["url_page"].'", 1250));
-                                </script>';
+						$directory = DIR."/views/pages/custom/".$fields["url_page"];
 
-                            }
+						if(!file_exists($directory)){
 
-                        } else if($fields["type_page"] == "external_link" || $fields["type_page"] == "internal_link"){
+							mkdir($directory, 0755);
+						}
 
-                            echo '<script>
-                                fncMatPreloader("off");
-                                fncFormatInputs();
-                                fncSweetAlert("success","La página ha sido creada correctamente.", setTimeout(() => location.reload(), 1250));
-                            </script>';
-                            
-                        } else {
+						/*=============================================
+						Copiamos el archivo custom con el nuevo nombre
+						=============================================*/	
 
-                            echo '<script>
-                                fncMatPreloader("off");
-                                fncFormatInputs();
-                                fncSweetAlert("success","La página ha sido creada correctamente.", setTimeout(() => window.location="/'.$fields["url_page"].'", 1250));
-                            </script>';
+						$from = DIR."/views/pages/custom/custom.php";
 
-                        }
+						if(copy($from, $directory.'/'.$fields["url_page"].'.php')){
 
-                    }
-                }
+							echo '
 
-            }
+							<script>
 
-        }
+								fncMatPreloader("off");
+								fncFormatInputs();
+							    fncSweetAlert("success","La página ha sido creada con éxito",setTimeout(()=>window.location="/'.$fields["url_page"].'",1250));	
 
-    }
+							</script>
+
+							';
+
+						}
+
+					}else if($fields["type_page"] == "external_link" || $fields["type_page"] == "internal_link"){
+
+						echo '
+
+						<script>
+
+							fncMatPreloader("off");
+							fncFormatInputs();
+						    fncSweetAlert("success","La página ha sido creada con éxito",setTimeout(()=>location.reload(),1250));	
+
+						</script>
+
+						';
+
+
+					}else{
+
+						echo '
+
+						<script>
+
+							fncMatPreloader("off");
+							fncFormatInputs();
+						    fncSweetAlert("success","La página ha sido creada con éxito",setTimeout(()=>window.location="/'.$fields["url_page"].'",1250));	
+
+						</script>
+
+						';
+
+					}
+
+				}
+
+
+			}
+
+
+		}
+
+	}
 
 }

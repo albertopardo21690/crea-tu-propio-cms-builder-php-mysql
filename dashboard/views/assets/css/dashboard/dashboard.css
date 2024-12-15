@@ -53,6 +53,7 @@ Interfaz Dashboard
 
 #page-content-wrapper {
   flex-grow: 1;
+  width:50%;
 }
 
 /* Float the sidebar for mobile */
@@ -82,3 +83,5 @@ Interfaz Dashboard
 .borderDashboard{
     border: 1px solid #dce1e5 !important;
 }
+
+

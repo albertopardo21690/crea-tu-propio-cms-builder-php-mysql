@@ -1,70 +1,90 @@
-<?php
+<?php 
 
 require_once "../controllers/curl.controller.php";
 
-class PagesAjax {
-    // Cambiar el oden de página
 
-    public $idPage;
-    public $index;
-    public $token;
+class PagesAjax{
 
-    public function updatePageOrder() {
+	/*=============================================
+	Cambiar el orden de página
+	=============================================*/ 
 
-        $url = "pages?id=". base64_decode($this->idPage) ."&nameId=id_page&token=".$this->token."&table=admins&suffix=admin";
-        $method = "PUT";
-        $fields = "order_page=".$this->index;
+	public $idPage;
+	public $index; 
+	public $token; 
 
-        $updateOrder = CurlController::request($url, $method, $fields);
+	public function updatePageOrder(){
 
-        if ($updateOrder->status == 200) {
-            echo $updateOrder->status;
-        }
+		$url = "pages?id=".base64_decode($this->idPage)."&nameId=id_page&token=".$this->token."&table=admins&suffix=admin";
+		$method = "PUT";
+		$fields = "order_page=".$this->index;
 
-    }
+		$updateOrder = CurlController::request($url,$method,$fields);
 
-    // Eliminar página
+		if($updateOrder->status == 200){
 
-    public $idPageDelete;
+			echo $updateOrder->status;
+		
+		}
 
-    public function deletePage() {
+	}
 
-        // Validar módulos vinculados a la página
+	/*=============================================
+	Eliminar Página
+	=============================================*/ 
 
-        $url = "modules?linkTo=id_page_module&equalTo=".base64_decode($this->idPageDelete);
-        $method = "GET";
-        $fields = array();
+	public $idPageDelete;
 
-        $getModule = CurlController::request($url, $method, $fields);
+	public function deletePage(){
 
-        if($getModule->status == 200) {
-            echo "error";
-        } else {
-            $url = "pages?id=".base64_decode($this->idPageDelete)."&nameId=id_page&token=".$this->token."&table=admins&suffix=admin";
-            $method = "DELETE";
-            $fields = array();
+		/*=============================================
+		Validar módulos vinculados a la página
+		=============================================*/
 
-            $deletePage = CurlController::request($url, $method, $fields);
+		$url = "modules?linkTo=id_page_module&equalTo=".base64_decode($this->idPageDelete);
+		$method = "GET";
+		$fields = array();
 
-            if($deletePage->status == 200) {
-                echo $deletePage->status;
-            }
-        }
+		$getModule = CurlController::request($url,$method,$fields);
 
-    }
+		if($getModule->status == 200){
+
+			echo "error";
+		
+		}else{
+
+			$url = "pages?id=".base64_decode($this->idPageDelete)."&nameId=id_page&token=".$this->token."&table=admins&suffix=admin";
+			$method = "DELETE";
+			$fields = array();
+
+			$deletePage = CurlController::request($url,$method,$fields);
+
+			if($deletePage->status == 200){
+
+				echo $deletePage->status;
+			}
+
+		}
+
+	}
+
 }
 
-if(isset($_POST["idPage"])) {
-    $ajax = new PagesAjax();
-    $ajax -> idPage = $_POST["idPage"];
-    $ajax -> index = $_POST["index"];
-    $ajax -> token = $_POST["token"];
-    $ajax -> updatePageOrder();
+if(isset($_POST["idPage"])){
+
+	$ajax = new PagesAjax();
+	$ajax -> idPage = $_POST["idPage"];
+	$ajax -> index = $_POST["index"];
+	$ajax -> token = $_POST["token"];
+	$ajax -> updatePageOrder();
 }
 
-if(isset($_POST["idPageDelete"])) {
-    $ajax = new PagesAjax();
-    $ajax -> idPageDelete = $_POST["idPageDelete"];
-    $ajax -> token = $_POST["token"];
-    $ajax -> deletePage();
+
+
+if(isset($_POST["idPageDelete"])){
+
+	$ajax = new PagesAjax();
+	$ajax -> idPageDelete = $_POST["idPageDelete"];
+	$ajax -> token = $_POST["token"];
+	$ajax -> deletePage();
 }

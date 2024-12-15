@@ -1,19 +1,24 @@
-<?php
+<?php 
+/*=============================================
+Depurar Errores
+=============================================*/
 
-// Depurar errores
-
-define('DIR', __DIR__);
+define('DIR',__DIR__);
 
 ini_set("display_errors", 1);
-ini_set("log_errors", 1);
-ini_set("error_log", DIR . "/php_error_log");
+ini_set("log_erros", 1);
+ini_set("error_log", DIR."/php_error_log");
 
-// Requerimientos
+/*=============================================
+Requerimientos
+=============================================*/
 
 require_once "controllers/template.controller.php";
 require_once "controllers/curl.controller.php";
 
-// Plantilla
+/*=============================================
+Plantilla
+=============================================*/
 
 $index = new TemplateController();
 $index -> index();

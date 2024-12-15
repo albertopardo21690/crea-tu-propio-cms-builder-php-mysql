@@ -1,113 +1,144 @@
-/** Abrir ventana modal de página */
+/*=============================================
+Abrir ventana modal de páginas
+=============================================*/
 
-$(document).on("click",".myPage", function() {
-    $("#myPage").modal("show");
+$(document).on("click",".myPage",function(){
 
-    var page = $(this).attr("page");
-    
-    $("#myPage").on('shown.bs.modal', function() {
-        
-        if(page != undefined) {
-            
-            /** Editar pagina */
+	$("#myPage").modal("show");
 
-            $("#title_page").before(`
-                
-                <input type="hidden" name="id_page" id="id_page" value="${btoa(JSON.parse(page).id_page)}">
-            
-            `)
+	var page = $(this).attr("page");
+	
+	$("#myPage").on('shown.bs.modal',function(){
 
-            $("#title_page").val(JSON.parse(page).title_page);
-            $("#url_page").val(JSON.parse(page).url_page);
-            $("#icon_page").val(JSON.parse(page).icon_page);
-            $("#type_page").val(JSON.parse(page).type_page);
+		if(page != undefined){
 
-        } else {
+			/*=============================================
+			Editar Página
+			=============================================*/
 
-            $("#title_page").val('');
-            $("#url_page").val('');
-            $("#icon_page").val('');
-            $("#type_page").val('');
+			$("#title_page").before(`
 
-        }
+				<input type="hidden" id="id_page" name="id_page" value="${btoa(JSON.parse(page).id_page)}">
 
-    })
+			`)
+
+			$("#title_page").val(JSON.parse(page).title_page);
+			$("#url_page").val(JSON.parse(page).url_page);
+			$("#icon_page").val(JSON.parse(page).icon_page);
+			$("#type_page").val(JSON.parse(page).type_page);
+		
+
+		}else{
+
+			$("#title_page").val('');
+			$("#url_page").val('');
+			$("#icon_page").val('');
+			$("#type_page").val('');
+		}
+
+	})
+
 })
 
-/** Cambiar orden de páginas */
+/*=============================================
+Cambiar orden de páginas
+=============================================*/
 
 $("#sortable").sortable({
-    placeholder: 'sort-highlight',
-    handle: '.handle',
-    forcePlaceholderSize: true,
-    zIndex: 999999,
-    out: function(event, ui) {
-        var listPage = $("#sortable li");
-        var countList = 0;
+	placeholder: 'sort-highlight',
+	handle: '.handle',
+	forcePlaceholderSize: true,
+	zIndex:999999,
+	out: function(event,ui){
+		
+		var listPage = $("#sortable li");
+		var countList = 0;
 
-        listPage.each((i) => {
-            var idPage = $(listPage[i]).attr("idPage");
-            var index = i+1;
+		listPage.each((i)=>{
 
-            var data = new FormData();
-            data.append("idPage", idPage);
-            data.append("index", index);
-            data.append("token", localStorage.getItem("tokenAdmin"));
+			var idPage = $(listPage[i]).attr("idPage");
+			var index = i+1;
 
-            $.ajax({
-                url: "/ajax/pages.ajax.php",
-                method: "POST",
-                data: data,
-                contentType: false,
-                cache: false,
-                processData: false,
-                success: function(response) {
-                    if(response == 200) {
-                        countList++;
+			var data = new FormData();
+			data.append("idPage",idPage);
+			data.append("index", index);
+			data.append("token", localStorage.getItem("tokenAdmin"));
 
-                        if(countList == listPage.length) {
-                            fncToastr("success","El orden del menú ha sido actualizado con éxito.");
-                        }
-                    };
-                    
-                }
-            })
-        })
-    }
+			$.ajax({
+
+				url:"/ajax/pages.ajax.php",
+				method:"POST",
+				data:data,
+				contentType:false,
+				cache:false,
+				processData:false,
+				success: function(response){
+					
+					if(response == 200){
+
+						countList++;
+
+						if(countList == listPage.length){
+
+							fncToastr("success", "El orden del menú ha sido actualizado con éxito");
+						}
+					}
+
+				}
+
+			})
+
+		})
+
+	}
+
 })
 
-/** Eliminar una página */
+/*=============================================
+Eliminar una página
+=============================================*/
 
-$(document).on("click", ".deletePage", function() {
-    var idPage = $(this).attr("idPage");
-    
-    if(atob(idPage) == 1 || atob(idPage) == 2){
-        fncToastr("error","ERROR: Esta página no se puede borrar.");
-        return;
-    }
+$(document).on("click",".deletePage",function(){
 
-    fncSweetAlert("confirm", "¿Estás seguro de querer borrar esta página?", "").then(resp=>{
-        if(resp) {
-            var data = new FormData();
-            data.append("idPageDelete", idPage);
-            data.append("token", localStorage.getItem("tokenAdmin"));
+	var idPage = $(this).attr("idPage");
+	
+	if(atob(idPage) == 1 || atob(idPage) == 2){
 
-            $.ajax({
-                url: "/ajax/pages.ajax.php",
-                method: "POST",
-                data: data,
-                contentType: false,
-                cache: false,
-                processData: false,
-                success: function(response) {
-                    if(response == 200) {
-                        fncSweetAlert("success","La página ha sido eliminada con éxito",setTimeout(()=>location.reload(),1250));
-                    } else {
-                        fncToastr("error","ERROR: La página tiene módulos vinculados.");
-                    }
+		fncToastr("error", "Esta página no se puede borrar");
+		return;
+	}
 
-                }
-            })
-        }
-    })
+	fncSweetAlert("confirm", "¿Está seguro de borrar esta página?", "").then(resp=>{
+
+		if(resp){
+			
+			var data = new FormData();
+			data.append("idPageDelete",idPage);
+			data.append("token", localStorage.getItem("tokenAdmin"));
+
+			$.ajax({
+
+				url:"/ajax/pages.ajax.php",
+				method:"POST",
+				data:data,
+				contentType:false,
+				cache:false,
+				processData:false,
+				success: function(response){
+					
+					if(response == 200){
+
+						fncSweetAlert("success","La página ha sido eliminada con éxito",setTimeout(()=>location.reload(),1250));
+					
+					}else{
+
+						fncToastr("error", "ERROR: La página tiene módulos vinculados");
+					}
+				}
+
+			})
+
+		}
+	})
+
 })

@@ -102,6 +102,7 @@ function updateWidth() {
 
 updateWidth();
 
+
 /*=============================================
 Limpiar el campo de icono
 =============================================*/
@@ -112,10 +113,13 @@ $(document).on("change",".cleanIcon",function(){
 
     $(this).val($(this).val().split('"')[1]);
 
-  } else {
-    
-    $(this).val($(this).val());
+  }else{
 
+     $(this).val($(this).val());
   }
 
 })
+
+
+
+

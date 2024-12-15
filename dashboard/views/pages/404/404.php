@@ -8,6 +8,7 @@
 		<div class="card rounded p-4 w-25 text-center" style="min-width: 320px !important;">
 
 			<h1 class="textColor">404</h1>
+
 			
 			<h3><i class="fas fa-exclamation-triangle text-default textColor"></i> Oops! Página no encontrada.</h3>
 
