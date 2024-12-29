@@ -133,10 +133,50 @@ class InstallController{
 
 			$stmtColumns = InstallController::connect()->prepare($sqlColumns);
 
+			/*=============================================
+			Creamos la tabla folders
+			=============================================*/
+			
+			$sqlFolders = "CREATE TABLE folders ( 
+				id_folder  INT NOT NULL AUTO_INCREMENT,
+				id_folder_file INT NULL DEFAULT '0',
+				name_file TEXT NULL DEFAULT NULL,
+				extension_file TEXT NULL DEFAULT NULL,
+				type_file TEXT NULL DEFAULT NULL,
+				size_file DOUBLE NULL DEFAULT '0',
+				link_file TEXT NULL DEFAULT NULL,
+				thumbnail_vimeo_file TEXT NULL DEFAULT NULL,
+				id_mailchimp_file TEXT NULL DEFAULT NULL,
+				date_created_file DATE NULL DEFAULT NULL,
+				date_updated_file TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				PRIMARY KEY (id_folder))";
+
+			$stmtFolders = InstallController::connect()->prepare($sqlFolders);
+
+			/*=============================================
+			Creamos la tabla files
+			=============================================*/
+			
+			$sqlFiles = "CREATE TABLE files ( 
+				id_files  INT NOT NULL AUTO_INCREMENT,
+				name_folder TEXT NULL DEFAULT NULL,
+				size_folder TEXT NULL DEFAULT NULL,
+				total_folder DOUBLE NULL DEFAULT '0',
+				max_upload_folder TEXT NULL DEFAULT NULL,
+				url_folder TEXT NULL DEFAULT NULL,
+				keys_folder TEXT NULL DEFAULT NULL,
+				date_created_file DATE NULL DEFAULT NULL,
+				date_updated_file TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				PRIMARY KEY (id_files))";
+
+			$stmtFiles = InstallController::connect()->prepare($sqlFiles);
+
 			if($stmtAdmins->execute() && 
 			   $stmtPages->execute() &&
 			   $stmtModules->execute() &&
-			   $stmtColumns->execute()
+			   $stmtColumns->execute() &&
+			   $stmtFolders->execute() &&
+			   $stmtFiles->execute()
 			){
 
 				/*=============================================
@@ -195,6 +235,23 @@ class InstallController{
 				$adminPage = CurlController::request($url,$method,$fields);
 
 				/*=============================================
+				Creamos la página de archivos
+				=============================================*/
+
+				$url = "pages?token=no&except=id_page";
+				$method = "POST";
+				$fields = array(
+					"title_page" => "Archivos",
+					"url_page" => "archivos",
+					"icon_page" => "bi bi-file-earmark-image",
+					"type_page" => "custom",
+					"order_page" => 3,
+					"date_created_page" => date("Y-m-d")
+				);
+
+				$filesPage = CurlController::request($url,$method,$fields);
+
+				/*=============================================
 				Creamos el módulo Breadcrumb para la página de administradores
 				=============================================*/
 
@@ -226,11 +283,30 @@ class InstallController{
 
 				$tableModule = CurlController::request($url,$method,$fields);
 
+				/*=============================================
+				Creamos el folder de servidor
+				=============================================*/
+
+				$url = "folders?token=no&except=id_folder";
+				$method = "POST";
+				$fields = array(
+					"name_folder" => "Server",
+					"size_folder" => "200000000000",
+					"max_upload_folder" => "500000000",
+					"url_folder" => $_SERVER["REQUEST_SCHEME"]."://".$_SERVER["SERVER_NAME"],
+					"date_created_folder"  => date("Y-m-d")
+				);
+
+				$serverFolder = CurlController::request($url,$method,$fields);
+
 				if($register->status == 200 && 
 				   $homePage->status == 200 &&
 				   $adminPage->status == 200 &&
+				   $filesPage->status == 200 &&
 				   $breadcrumbModule->status == 200 &&
-				   $tableModule->status == 200){
+				   $tableModule->status == 200 &&
+				   $serverFolder->status == 200
+				){
 
 					/*=============================================
 					Creamos cada una de las columnas de la tabla de administradores
@@ -242,7 +318,7 @@ class InstallController{
 							"title_column" =>  "rol_admin",
 							"alias_column" => "rol",
 							"type_column" =>  "select",
-							"matrix_column"  => "admin,editor",
+							"matrix_column"  => "superadmin,admin,editor",
 							"visible_column" => 1,
 							"date_created_column" => date("Y-m-d")
 						],

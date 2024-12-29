@@ -447,6 +447,116 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "GET Orden y Límite",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{apikey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{endpoint}}exampless?orderBy=id_example&orderMode=ASC&startAt=20&endAt=10",
+					"host": [
+						"{{endpoint}}exampless"
+					],
+					"query": [
+						{
+							"key": "orderBy",
+							"value": "id_example"
+						},
+						{
+							"key": "orderMode",
+							"value": "ASC"
+						},
+						{
+							"key": "startAt",
+							"value": "20"
+						},
+						{
+							"key": "endAt",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Búsqueda con filtro",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{apikey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{endpoint}}exampless?linkTo=select_example,int_example&search=ame,342643",
+					"host": [
+						"{{endpoint}}exampless"
+					],
+					"query": [
+						{
+							"key": "linkTo",
+							"value": "select_example,int_example"
+						},
+						{
+							"key": "search",
+							"value": "ame,342643"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Rangos",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{apikey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{endpoint}}exampless?linkTo=date_created_example&between1=2020-01-01&between2=2022-12-31&filterTo=text_example&inTo=Lorem ipsum dolor sit amet",
+					"host": [
+						"{{endpoint}}exampless"
+					],
+					"query": [
+						{
+							"key": "linkTo",
+							"value": "date_created_example"
+						},
+						{
+							"key": "between1",
+							"value": "2020-01-01"
+						},
+						{
+							"key": "between2",
+							"value": "2022-12-31"
+						},
+						{
+							"key": "filterTo",
+							"value": "text_example"
+						},
+						{
+							"key": "inTo",
+							"value": "Lorem ipsum dolor sit amet"
+						}
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }

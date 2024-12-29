@@ -28,7 +28,10 @@ $module->columns = $columns;
 /*=============================================
 Traemos contenido de la tabla
 =============================================*/
-$url = $module->title_module;
+$limit = 10;
+$totalPages = 0;
+$totalData = 0;
+$url = $module->title_module."?orderBy=id_".$module->suffix_module."&orderMode=DESC&startAt=0&endAt=".$limit;
 $method = "GET";
 $fields = array();
 
@@ -38,10 +41,20 @@ if($table->status == 200){
 
 	$table = $table->results;
 
-}else{
+	/*=============================================
+	Traemos contenido total de la tabla
+	=============================================*/
+	
+	$url = $module->title_module."?select=id_".$module->suffix_module;
+	$totalData = CurlController::request($url,$method,$fields)->total;
+	$totalPages = ceil($totalData/$limit);
+
+}else{ 
 
 	$table = array();
 }
+
+$totalColumns = 3;
 
 ?>
 
@@ -52,7 +65,10 @@ Cargamos el gestor de datos
 <?php if (!empty($routesArray[1]) && $routesArray[1] == "manage"): ?>
 
 
-	<?php include "manage/manage.php" ?>
+	<?php
+		include "manage/manage.php";
+		include "views/modules/modals/files.php";
+	?>
 
 <!--===========================================
 Cargamos el módulo tabla
@@ -137,15 +153,61 @@ Cargamos el módulo tabla
 				        	Selección masiva
 				        	===========================================-->
 
-							<button type="button" class="btn btn-sm bg-blue rounded border-0">
+							<button type="button" class="btn btn-sm bg-blue rounded border-0 checkAllItems" mode="false">
 								<i class="bi bi-check2-square"></i>
 							</button>
+
+							<!--=========================================
+				        	Cambio Selección masiva
+				        	===========================================-->
+
+				        	<?php 
+
+				        	if (!empty($columns) && in_array("select", array_column($columns,"type_column"))){
+
+				        		foreach ($columns as $key => $value) {
+
+				        			if($value->type_column == "select"){
+
+				        				echo '<button type="button" class="btn btn-sm bg-indigo rounded border-0 mySelects" column="'.$value->title_column.'" matrix="'.$value->matrix_column.'"><i class="bi bi-arrow-down-up"></i></button>';
+
+				        				break;
+				        			}
+
+				        		}
+
+				        	}
+
+				        	?>
+
+							<!--=========================================
+				        	Cambio Boleano masivo
+				        	===========================================-->
+
+				        	<?php 
+
+				        	if (!empty($columns) && in_array("boolean", array_column($columns,"type_column"))){
+
+				        		foreach ($columns as $key => $value) {
+
+				        			if($value->type_column == "boolean"){
+
+				        				echo '<button type="button" class="btn btn-sm bg-purple rounded border-0 myBooleans" column="'.$value->title_column.'"><i class="bi bi-arrow-left-right"></i></button>';
+
+				        				break;
+				        			}
+
+				        		}
+
+				        	}
+
+				        	?>
 
 							<!--=========================================
 				        	Eliminación masiva
 				        	===========================================-->
 
-							<button type="button" class="btn btn-sm bg-maroon rounded border-0">
+							<button type="button" class="btn btn-sm bg-maroon rounded border-0 deleteAllItems">
 								<i class="bi bi-trash"></i>
 							</button>
 
@@ -165,6 +227,20 @@ Cargamos el módulo tabla
 
 		<div class="card-body">
 
+			<!--========================================
+			Filtros Iniciales
+			=========================================-->
+
+			<input type="hidden" id="contentModule" value='<?php echo json_encode($module) ?>'>
+			<input type="hidden" id="orderByTable" value="id_<?php echo $module->suffix_module ?>">
+			<input type="hidden" id="orderModeTable" value="DESC">
+		    <input type="hidden" id="limitTable" value="<?php echo $limit ?>">
+		    <input type="hidden" id="rolAdmin" value="<?php echo $_SESSION["admin"]->rol_admin ?>">
+		    <input type="hidden" id="searchTable" value="">
+		    <input type="hidden" id="between1" value="<?php echo date("Y-m-d", 0) ?>">
+		    <input type="hidden" id="between2" value="<?php echo date("Y-m-d") ?>">
+		    <input type="hidden" id="checkItems" value="" table="<?php echo $module->title_module ?>" suffix="<?php echo $module->suffix_module ?>">
+
 			<!--=========================================
 	        Bloque de filtros
 	        ===========================================-->		
@@ -182,7 +258,7 @@ Cargamos el módulo tabla
 					</div>
 
 					<div class="col p-0">
-						<select class="form-select form-select-sm rounded" style="width:65px">
+						<select class="form-select form-select-sm rounded changeLimit" style="width:65px">
 						  <option value="10" class="small">10</option>
 						  <option value="25" class="small">25</option>
 						  <option value="50" class="small">50</option>
@@ -202,7 +278,7 @@ Cargamos el módulo tabla
 
 		        <div class="mb-3">
 		        	
-		        	<input type="text" class="form-control rounded form-control-sm" placeholder="Buscar...">
+		        	<input type="text" id="searchItem" class="form-control rounded form-control-sm" placeholder="Buscar...">
 
 		        </div>
 
@@ -218,15 +294,32 @@ Cargamos el módulo tabla
 	        		
 	        		<thead>
 	        			<tr>
-	        				<th>#</th>
+	        				<th class="position-relative"># <i class="bi bi-arrow-down-short position-absolute orderFilter" orderBy="id_<?php echo $module->suffix_module ?>" orderMode="ASC" style="cursor: pointer;"></i></th>
 					        <th>Sel.</th>  
 					       
 					        <?php if (!empty($columns)): ?>
+
 					        	<?php foreach ($columns as $index => $item): ?>
 
-					        		<?php if ($item->visible_column == 1): ?>
+					        		<?php if ($item->visible_column == 1): $totalColumns++ ?>
 					        			
-					        			<th class="text-capitalize"><?php echo $item->alias_column ?></th>	
+					        			<th class="text-capitalize position-relative">
+					        				<?php echo $item->alias_column ?>
+
+					        				<?php if ($item->type_column == "text" || 
+					        						  $item->type_column == "textarea" || 
+					        						  $item->type_column == "select" ||
+					        						  $item->type_column == "int" || 
+					        						  $item->type_column == "double" ||
+					        						  $item->type_column == "money" ||
+					        						  $item->type_column == "date" ||
+					        						  $item->type_column == "time" || 
+					        						  $item->type_column == "datetime" || 
+					        						  $item->type_column == "link"  ): ?>
+					        					<i class="bi bi-arrow-down-short position-absolute orderFilter" orderBy="<?php echo $item->title_column ?>" orderMode="ASC" style="cursor: pointer;"></i>
+					        				<?php endif ?>
+					        					
+					        			</th>	
 
 					        		<?php endif ?>
 					        		
@@ -242,7 +335,7 @@ Cargamos el módulo tabla
 	        			</tr>
 	        		</thead>
 
-	        		<tbody class="small">
+	        		<tbody class="small" id="loadTable">
 
 	        			<?php if (!empty($table)): ?>
 
@@ -252,8 +345,8 @@ Cargamos el módulo tabla
 
         						<td><?php echo ($key+1) ?></td>
         						<td>
-		        					<div class="form-check">
-		        						<input class="form-check-input" type="checkbox">
+		        					<div class="form-check formCheck">
+		        						<input class="form-check-input checkItem" type="checkbox" idItem="<?php echo base64_encode($value["id_".$module->suffix_module]) ?>">
 		        					</div>
 		        				</td>
 
@@ -315,7 +408,7 @@ Cargamos el módulo tabla
 											}
 
 											echo '<div class="form-check form-switch">
-											<input class="form-check-input px-3" type="checkbox" id="mySwtich" '.$checked.'>
+											<input class="form-check-input px-3 changeBoolean" type="checkbox" id="mySwtich" '.$checked.' idItem="'.base64_encode($value["id_".$module->suffix_module]).'" table="'.$module->title_module.'" suffix="'.$module->suffix_module.'" column="'.$item->title_column.'">
 											<label class="form-check-label ps-1 align-middle" for="mySwitch">'.$label.'</label>
 											</div>';
 
@@ -410,7 +503,7 @@ Cargamos el módulo tabla
 	        			<?php else: ?>
 
 	        				<tr>
-	        					<td colspan="1">No hay registros disponibles</td>
+	        					<td colspan="<?php echo $totalColumns ?>" class="text-center py-3">No hay registros disponibles</td>
 	        				</tr>
 	        				
 	        			<?php endif ?>
@@ -419,6 +512,8 @@ Cargamos el módulo tabla
 
 	        	</table>
 	        </div>	
+
+	        <?php if (!empty($table)): ?>
 
 	        <!--=========================================
 	        Bloque final
@@ -430,12 +525,12 @@ Cargamos el módulo tabla
 	        	Visualización de registros
 	        	===========================================-->	
 
-	        	<div class="mb-3">
+	        	<div class="mb-3 blockFooter" id="cont-filters">
 
 	        		<small>Mostrando
-	        			<span>1</span> a 
-	        			<span>3</span> de
-	        			<span>3</span>
+	        			<span id="startItems">1</span> a 
+	        			<span id="endItems"><?php echo $limit ?></span> de
+	        			<span id="totalItems"><?php echo $totalData ?></span>
 	        		</small>
 	        		
 	        	</div>
@@ -444,24 +539,28 @@ Cargamos el módulo tabla
 	        	Paginación
 	        	===========================================-->	
 
-	        	<div class="mb-3">
+	        	<div class="mb-3 blockFooter" id="cont-pagination">
 
-		        	<ul class="pagination">
-		        		<li class="page-item"><a class="page-link" href="#">Previous</a></li>
-		        		<li class="page-item"><a class="page-link" href="#">1</a></li>
-		        		<li class="page-item"><a class="page-link" href="#">2</a></li>
-		        		<li class="page-item"><a class="page-link" href="#">3</a></li>
-		        		<li class="page-item"><a class="page-link" href="#">Next</a></li>
+		        	<ul id="pagination" class="pagination pagination-sm rounded" totalPages="<?php echo $totalPages ?>">
 		        	</ul>
 
 		        </div>
 	        	
 	        </div>
 
+	        <?php endif ?>
+
 		</div>
 
 	</div>
 
 </div>
+
+<?php 
+
+  include "views/modules/modals/booleans.php"; 
+  include "views/modules/modals/selects.php";
+
+?>
 
 <?php endif ?>

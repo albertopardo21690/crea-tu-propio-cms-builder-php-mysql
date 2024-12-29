@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /*=============================================
 Iniciar variables de sesión
@@ -6,6 +6,40 @@ Iniciar variables de sesión
 
 ob_start();
 session_start();
+
+/*=============================================
+Zona Horaria
+=============================================*/
+
+date_default_timezone_set("Europe/Madrid");
+
+/*=============================================
+Validar si el token está expirado
+=============================================*/
+
+if(isset($_SESSION["admin"])) {
+
+	$url = "admins?id=".$_SESSION["admin"]->id_admin."&nameId=id_admin&token=".$_SESSION["admin"]->token_admin."&table=admins&suffix=admin";
+	$method = "PUT";
+	$fields = "date_update_admin=".date("Y-m-d G:i:s");
+
+	$update = CurlController::request($url,$method,$fields);
+
+	if($update->status == 303) {
+
+		session_destroy();
+
+		echo '<script>
+		
+			window.location = "/logout";
+
+		</script>';
+
+		return;
+
+	}
+
+}
 
 /*=============================================
 Capturar parámetros de la url
@@ -109,6 +143,17 @@ if($adminTable->status == 404){
 				color: <?php echo $admin->color_admin ?> !important;
 			}
 
+			.page-item.active .page-link {
+				z-index: 3;
+				color: #fff !important;
+				background-color: <?php echo $admin->color_admin ?> !important;
+				border-color: <?php echo $admin->color_admin ?> !important;
+			}
+
+			.page-link {
+				color: <?php echo $admin->color_admin ?> !important;		
+			}
+
 		</style>
 
 	<?php else: ?>
@@ -202,7 +247,7 @@ if($adminTable->status == 404){
 	<link rel="stylesheet" href="/views/assets/css/custom/custom.css">
 	<link rel="stylesheet" href="/views/assets/css/dashboard/dashboard.css">
 	<link rel="stylesheet" href="/views/assets/css/colors/colors.css">
-
+	<link rel="stylesheet" href="/views/assets/css/fms/fms.css">
 
 </head>
 <body>
@@ -370,6 +415,7 @@ if($adminTable->status == 404){
 	<script src="/views/assets/js/modules/modules.js"></script>
 	<script src="/views/assets/js/dynamic-forms/dynamic-forms.js"></script>
 	<script src="/views/assets/js/dynamic-tables/dynamic-tables.js"></script>
+	<script src="/views/assets/js/fms/fms.js"></script>
 		
 	<?php endif ?>
 

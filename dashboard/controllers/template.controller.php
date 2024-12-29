@@ -108,6 +108,139 @@ class TemplateController{
 		return $value;
 	}
 
+	/*=============================================
+	Devuelva la miniatura de la lista
+	=============================================*/
+
+	static public function returnThumbnailList($value){
+
+		/*=============================================
+		Capturar miniatura imagen
+		=============================================*/
+
+		if(explode("/",$value->type_file)[0] == "image"){
+
+			$path = '<img src="'.$value->link_file.'" class="rounded" style="width:100px; height:100px; object-fit: cover; object-position: center;">';
+
+		}
+
+		/*=============================================
+		Capturar miniatura video
+		=============================================*/
+
+		if(explode("/",$value->type_file)[0] == "video"){
+
+			if(explode("/",$value->type_file)[1] == "mp4"){
+
+				$path = '<video class="rounded" style="width:100px; height:100px; object-fit: cover; object-position: center;">
+				<source src="'.$value->link_file.'" type="'.$value->type_file.'">
+				</video>';
+
+			}else{
+
+				$path = '<img src="/views/assets/img/multimedia.png" class="rounded" style="width:100px; height:100px; object-fit: cover; object-position: center;">';
+			}
+
+		}
+
+		/*=============================================
+		Capturar miniatura audio
+		=============================================*/
+
+		if(explode("/",$value->type_file)[0] == "audio"){
+
+			$path = '<img src="/views/assets/img/multimedia.png" class="rounded" style="width:100px; height:100px; object-fit: cover; object-position: center;">';
+
+		}
+
+		/*=============================================
+		Capturar miniatura pdf
+		=============================================*/
+
+		if(explode("/",$value->type_file)[1] == "pdf"){
+
+			$path = '<img src="/views/assets/img/pdf.jpeg" class="rounded" style="width:100px; height:100px; object-fit: cover; object-position: center;">';
+		}
+
+		/*=============================================
+		Capturar miniatura zip
+		=============================================*/
+
+		if(explode("/",$value->type_file)[1] == "zip"){
+
+			$path = '<img src="/views/assets/img/zip.jpg" class="rounded" style="width:100px; height:100px; object-fit: cover; object-position: center;">';
+		}
+
+		return $path;
+	}
+
+
+	/*=============================================
+	Devuelva la miniatura de la cuadrícula
+	=============================================*/
+
+	static public function returnThumbnailGrid($value){
+
+		/*=============================================
+		Capturar miniatura imagen
+		=============================================*/
+
+		if(explode("/",$value->type_file)[0] == "image"){
+
+			$path = '<img src="'.$value->link_file.'" class="rounded card-img-top w-100">';
+
+		}
+
+		/*=============================================
+		Capturar miniatura video
+		=============================================*/
+
+		if(explode("/",$value->type_file)[0] == "video"){
+
+			if(explode("/",$value->type_file)[1] == "mp4"){
+
+				$path = '<video class="rounded card-img-top w-100">
+					<source src="'.$value->link_file.'" type="'.$value->type_file.'">
+				</video>';
+
+			}else{
+
+				$path = '<img src="/views/assets/img/multimedia.png" class="rounded card-img-top w-100">';
+			}
+
+		}
+
+		/*=============================================
+		Capturar miniatura audio
+		=============================================*/
+
+		if(explode("/",$value->type_file)[0] == "audio"){
+
+			$path = '<img src="/views/assets/img/multimedia.png" class="rounded card-img-top w-100">';
+
+		}
+
+		/*=============================================
+		Capturar miniatura pdf
+		=============================================*/
+
+ 		if(explode("/",$value->type_file)[1] == "pdf"){
+
+ 			$path = '<img src="/views/assets/img/pdf.jpeg" class="rounded card-img-top w-100">';
+ 		}
+
+ 		/*=============================================
+		Capturar miniatura zip
+		=============================================*/
+
+ 		if(explode("/",$value->type_file)[1] == "zip"){
+
+ 			$path = '<img src="/views/assets/img/zip.jpg" class="rounded card-img-top w-100">';
+ 		}
+	 		
+		return $path;
+	}
+
 }
 
 ?>

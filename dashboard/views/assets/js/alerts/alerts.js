@@ -116,6 +116,12 @@ function fncSweetAlert(type, text, url){
 			});
 
 		break;
+
+		case "close":
+
+             Swal.close()
+             
+        break;
 	}
 
 }

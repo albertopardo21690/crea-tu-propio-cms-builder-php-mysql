@@ -72,6 +72,7 @@ $block2 = count($module->columns) - $block1;
 
 				</div>
 				
+
 			</div>
 
 			<!--=========================================

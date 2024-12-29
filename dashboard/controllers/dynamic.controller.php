@@ -39,7 +39,6 @@ class DynamicController{
 					if($value->type_column == "password" && !empty($_POST[$value->title_column])){
 
 						$fields.= $value->title_column."=".crypt(trim($_POST[$value->title_column]),'$2a$07$azybxcags23425sdg23sdfhsd$')."&";
-						
 					}else{
 					
 						$fields.= $value->title_column."=".urlencode(trim($_POST[$value->title_column]))."&";
@@ -91,7 +90,6 @@ class DynamicController{
 					if($value->type_column == "password"){
 
 						$fields[$value->title_column] = crypt(trim($_POST[$value->title_column]),'$2a$07$azybxcags23425sdg23sdfhsd$');
-						
 					}else{
 					
 						$fields[$value->title_column] = urlencode(trim($_POST[$value->title_column]));

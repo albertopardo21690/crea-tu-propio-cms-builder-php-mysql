@@ -6,7 +6,7 @@
 			
 			<form method="POST" class="needs-validation" novalidate>
 				
-				<h3 class="pt-3 text-center">Instalación Dashboard</h3>
+				<h3 class="pb-3 text-center">Instalación Dashboard</h3>
 
 				<hr>
 

@@ -55,7 +55,7 @@ class AdminsController{
 
 				echo '<script>
 
-					localStorage.setItem("tokenAdmin","'.$login->results[0]->token_admin.'");
+					localStorage.setItem("token_admin","'.$login->results[0]->token_admin.'");
 					fncMatPreloader("off");
 					fncFormatInputs();
 					location.reload();
@@ -63,15 +63,25 @@ class AdminsController{
 				</script>';
 
 
-			}else{
+			} else{
 
-				echo '<div class="alert alert-danger mt-3 rounded">Error al ingresar: '.$login->results.'</div>
+				if($login->results == "Wrong email") {
+
+					$error = "El correo esta mal escrito.";
+
+				} else {
+
+					$error = "La contraseña esta mal escrita.";
+
+				}
+
+				echo '<div class="alert alert-danger mt-3 rounded">Error al ingresar: '.$error.'</div>
 
 				<script>
 
 					fncMatPreloader("off");
 					fncFormatInputs();
-					fncToastr("error", "Error al ingresar: '.$login->results.'");
+					fncToastr("error", "Error al ingresar: '.$error.'");
 
 				</script>';
 			}
