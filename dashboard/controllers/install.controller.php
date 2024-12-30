@@ -467,6 +467,31 @@ class InstallController{
 
 	}
 
+	/*=============================================
+	Validar existencia de una tabla en la BD
+	=============================================*/
+
+	static public function getTable($table) {
+
+		$database = InstallController::infoDatabase()["database"];
+		$validate = InstallController::connect()->query("SELECT COLUMN_NAME AS item FROM information_schema.columns WHERE table_schema = '$database' AND table_name = '$table'")->fetchAll(PDO::FETCH_OBJ);
+
+		/*=============================================
+		Validamos existencia de la tabla
+		=============================================*/
+
+		if(empty($validate)) {
+			
+			return 200;
+			
+		} else {
+			
+			return 404;
+
+		}
+
+	}
+
 }
 
 ?>

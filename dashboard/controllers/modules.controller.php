@@ -13,7 +13,7 @@ class ModulesController{
 
 		if(isset($_POST["title_module"])){
 
-			echo '<script>
+			/*echo '<script>
 
 				fncMatPreloader("on");
 			    fncSweetAlert("loading", "Procesando...", "");
@@ -249,6 +249,66 @@ class ModulesController{
 			=============================================*/
 
 			}else{
+
+				/*=============================================
+				Validar primero que el módulo no exista
+				=============================================*/
+
+				$url = "modules?linkTo=title_module&type_module&equalTo=".strtolower(trim($_POST["title_module"])).",".$_POST["type_module"];
+				$method = "GET";
+				$fields = array();
+
+				$getModule = CurlController::request($url,$method,$fields);
+				
+				if($getModule->status == 200){
+
+					echo '
+
+					<script>
+
+						fncMatPreloader("off");
+						fncFormatInputs();
+					    fncToastr("error","ERROR: Esta módulo ya existe");	
+
+					</script>
+
+					';
+
+					return;
+
+				}
+
+				/*=============================================
+				Validar que la tabla en BD no exista
+				=============================================*/
+
+				if($_POST["type_module"] == "tables") {
+
+					$validate = InstallController::getTable(strtolower(trim($_POST["title_module"])));
+
+					if($validate == 200){
+
+						echo '
+	
+						<script>
+	
+							fncMatPreloader("off");
+							fncFormatInputs();
+							fncToastr("error","ERROR: Esa tabla ya existe en la BD.");	
+	
+						</script>
+	
+						';
+	
+						return;
+	
+					}
+
+				}
+
+				/*=============================================
+				Creación de los datos del módulo
+				=============================================*/
 
 				$url = "modules?token=".$_SESSION["admin"]->token_admin."&table=admins&suffix=admin";
 				$method = "POST";
